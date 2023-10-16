@@ -23,14 +23,18 @@ function App() {
   const [latestMatches, setLatestMatches] = useState<string[]>([""]);
   const getSummonerData = async () => {
     const data = (await axios.get(
-      `https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${userName}?api_key=RGAPI-1e91dce5-b72d-4e3d-93fd-59dd870c997c`
+      `https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${userName}?api_key=${
+        import.meta.env.VITE_RIOT_API
+      }`
     )) as SUMMONERV4;
     setSummData(data);
   };
 
   const getLatestMatches = async () => {
     const data = await axios.get(
-      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${summData?.data.puuid}/ids?start=0&count=20&api_key=RGAPI-1e91dce5-b72d-4e3d-93fd-59dd870c997c`
+      `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/${
+        summData?.data.puuid
+      }/ids?start=0&count=20&api_key=${import.meta.env.VITE_RIOT_API}`
     );
     setLatestMatches(data.data);
   };
