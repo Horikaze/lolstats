@@ -22,12 +22,26 @@ type Participant = {
   summonerLevel: number;
   summonerName: string;
   championName: string;
+  kills: number;
+  assists: number;
+  deaths: number;
+  totalDamageDealt: number;
+  magicDamageDealt: number;
+  physicalDamageDealt: number;
+  win: boolean;
 };
 const defParticipant: Participant = {
   puuid: "",
   summonerLevel: 0,
   summonerName: "",
   championName: "",
+  assists: 0,
+  deaths: 0,
+  kills: 0,
+  totalDamageDealt: 0,
+  physicalDamageDealt: 0,
+  magicDamageDealt: 0,
+  win: true,
 };
 
 type MatchData = {
@@ -73,7 +87,7 @@ function App() {
         matches.push(matchData);
       }
       console.log(matches);
-      setLatestMatches(matches); // Assuming setLatestMatches is a valid function for setting state
+      setLatestMatches(matches);
     } catch (error) {
       console.error("Error fetching latest matches:", error);
     }
@@ -88,8 +102,9 @@ function App() {
             type="text"
             onChange={(e) => setUserName(e.target.value)}
           />
-          <Button onClick={() => getSummonerData()}>Get data</Button>
-          <Button onClick={() => getLatestMatches()}>Get Matches</Button>
+          <Button variant={"secondary"} onClick={() => getSummonerData()}>
+            Get data
+          </Button>
         </div>
       </div>
       <div className="flex flex-col">
@@ -144,20 +159,45 @@ function App() {
                     key={match.metadata.matchId}
                     className="flex flex-col max-w-sm pt-5"
                   >
-                    <div className="p-2 rounded-md border-2 border-slate-500 mx-2">
+                    <div
+                      className={`p-2 rounded-md border-2 border-slate-500 mx-2 ${
+                        currPar.win ? "bg-yellow-100" : "bg-red-100"
+                      }`}
+                    >
                       <div className="flex flex-row justify-between">
                         <div className="text-sm">
                           <p>Game ID: {match.metadata.matchId}</p>
                         </div>
                         <ArrowBigDown className="w-6 h-6 place-self-end text-slate-600 cursor-pointer hover:bg-slate-400 transition rounded-md hover:text-white" />
                       </div>
-                      <div className="flex flex-row justify-between gap-y-2">
+                      <div className="flex flex-row justify-between">
                         <p>
                           <span className="font-semibold">Time:</span> {time}
                         </p>
                         <p>
                           <span className="font-semibold">Champion:</span>{" "}
                           {currPar.championName}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-y-1 mt-2 items-start">
+                        <p>
+                          <span className="font-semibold">K/D/A:</span>{" "}
+                          {`${currPar.kills}/${currPar.deaths}/${currPar.deaths}`}
+                        </p>
+                        <p>
+                          <span className="font-semibold">
+                            Total damage dealt:
+                          </span>{" "}
+                          {currPar.totalDamageDealt}
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <p
+                          className={`font-bold ${
+                            currPar.win ? "text-yellow-500" : "text-red-500"
+                          }`}
+                        >
+                          {currPar.win ? "WIN" : "LOSE"}
                         </p>
                       </div>
                     </div>
